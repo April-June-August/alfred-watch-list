@@ -13,6 +13,7 @@ Prepend_new = ENV['prepend_new_item'] == '1'
 Trash_on_watched = ENV['trash_on_watched'] == '1'
 Top_on_play = ENV['top_on_play'] == '1'
 Prefer_action_url = ENV['prefer_action_url'] == '1'
+Bundle_id_of_this_workflow = ENV['alfred_workflow_bundleid']
 
 FileUtils.mkpath(Lists_dir) unless Dir.exist?(Lists_dir)
 FileUtils.mkpath(File.dirname(Quick_playlist)) unless Dir.exist?(File.dirname(Quick_playlist))
@@ -256,7 +257,7 @@ def display_towatch(sort = nil)
     script_filter_items.push(item)
   end
 
-  puts({ items: script_filter_items }.to_json)
+  puts({ items: script_filter_items, skipKnowledge: true }.to_json)
 end
 
 def display_watched
@@ -371,7 +372,10 @@ def mark_watched(id)
   item_index = find_index(id, 'watched', all_lists)
   item = all_lists['watched'][item_index]
 
-  all_lists['watched'] = all_lists['watched'].first(Maximum_watched)
+  # original code removes item from watched list if more that x.
+  # all_lists['watched'] = all_lists['watched'].first(Maximum_watched)
+
+  # I'm keeping it forever.
   write_lists(all_lists)
 
   if item['type'] == 'stream'
@@ -475,7 +479,7 @@ def play_quick_playlist
   File.delete(Quick_playlist)
 
   ids.each do |id|
-    system('osascript', '-l', 'JavaScript', '-e', "Application('com.runningwithcrayons.Alfred').runTrigger('play_id', { inWorkflow: 'com.vitorgalvao.alfred.watchlist', withArgument: '#{id}' })")
+    system('osascript', '-l', 'JavaScript', '-e', "Application('com.runningwithcrayons.Alfred').runTrigger('play_id', { inWorkflow: '#{Bundle_id_of_this_workflow}', withArgument: '#{id}' })")
   end
 end
 

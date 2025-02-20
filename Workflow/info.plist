@@ -496,7 +496,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Watch List - Modified to handle multiple lines of urls</string>
+	<string>Watch List - Accept Multiple URLs</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -819,7 +819,7 @@ print id</string>
 				<key>script</key>
 				<string>require "#{Dir.pwd}/watchlist_functions.rb"
 
-play(ARGV[0]) unless play_quick_playlist</string>
+play(ARGV[0], send_to_watched = false) unless play_quick_playlist</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -2067,7 +2067,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<false/>
+				<true/>
 				<key>required</key>
 				<false/>
 				<key>text</key>
@@ -2105,7 +2105,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<true/>
+				<false/>
 				<key>required</key>
 				<false/>
 				<key>text</key>
