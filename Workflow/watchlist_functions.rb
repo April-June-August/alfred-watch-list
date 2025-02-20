@@ -134,7 +134,7 @@ def update_series(id)
   write_lists(all_lists)
 end
 
-def add_url_to_watchlist(url, playlist = false, id = random_hex)
+def process_single_url(url, playlist, id)
   playlist_flag = playlist ? '--yes-playlist' : '--no-playlist'
 
   all_names = Open3.capture2('yt-dlp', '--get-title', playlist_flag, url).first.split("\n")
@@ -148,7 +148,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   duration_machine = durations.map { |d| colons_to_seconds(d) }.inject(0, :+)
   duration_human = seconds_to_hms(duration_machine)
 
-  hash = {
+  stream_hash = {
     'id' => id,
     'type' => 'stream',
     'name' => name,
@@ -166,8 +166,30 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
     'ratio' => nil
   }
 
-  add_to_list(hash, 'towatch')
-  notification("Added as stream: “#{name}”")
+  add_to_list(stream_hash, 'towatch')
+  name
+end
+
+def add_url_to_watchlist(url, playlist = false, id = random_hex)
+  # Split the provided text into non-empty lines.
+  urls = url.split("\n").map(&:strip).reject(&:empty?)
+  if urls.size > 1
+    total = urls.size
+    urls.each_with_index do |single_url, idx|
+      # Generate a unique id for each URL in a multi-line input.
+      name = process_single_url(single_url, playlist, random_hex)
+      # If it's the last item, include the sound.
+      if idx == total - 1
+        notification("✅️ Added the last of #{total} items as stream: “#{name}”", 'Funk')
+      else
+        notification("Added #{idx + 1} in #{total} as stream: “#{name}”")
+      end
+    end
+  else
+    name = process_single_url(url, playlist, id)
+    # Single URL is the only (and thus last) item so include the sound.
+    notification("Added as stream: “#{name}”", 'Funk')
+  end
 end
 
 def display_towatch(sort = nil)
