@@ -176,15 +176,16 @@ def process_single_url(url, playlist, id)
   # copy the url if failed
   # IO.popen('pbcopy', 'w') { |f| f << url } if all_names.empty?
 
-  # record a failed list for failed items
-  File.open(Failed_list, "a") do |file|
-    file.puts url
+  if all_names.empty?
+    # record a failed list for failed items
+    File.open(Failed_list, "a") do |file|
+      file.puts url
+    end
+    return ""
   end
 
-  return ""
-
   # original logic is to just error out
-  error "Could not add url as stream: #{url}" if all_names.empty?
+  # error "Could not add url as stream: #{url}" if all_names.empty?
 
   # If playlist, get the playlist name instead of the the name of the first item
   name = all_names.count > 1 ? Open3.capture2('yt-dlp', '--yes-playlist', '--get-filename', '--output', '%(playlist)s', url).first.split("\n").first : all_names[0]
@@ -222,7 +223,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   urls = url.split("\n").map(&:strip).reject(&:empty?)
   added_count = 0
   total = urls.size
-  notification("Found #{total} #{total == 1 ? 'link' : 'links'}!", 'Frog')
+  # notification("Found #{total} #{total == 1 ? 'link' : 'links'}!", 'Frog')
 
   if urls.size > 1
     urls.each_with_index do |single_url, idx|
@@ -259,6 +260,9 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
 
     name = process_single_url(single_url, playlist, id)
     # Single URL is the only (and thus last) item so include the sound.
+    
+    # condition to guard name since we now return even if failed
+    error "Could not add url as stream: #{single_url}" if name.empty?
     notification("Added as stream: “#{name}”", 'Funk')
   end
 end
