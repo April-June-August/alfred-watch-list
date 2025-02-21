@@ -19,6 +19,21 @@ FileUtils.mkpath(Lists_dir) unless Dir.exist?(Lists_dir)
 FileUtils.mkpath(File.dirname(Quick_playlist)) unless Dir.exist?(File.dirname(Quick_playlist))
 File.write(Lists_file, { towatch: [], watched: [] }.to_json) unless File.exist?(Lists_file)
 
+def ordinal(number)
+  abs_number = number.to_i.abs
+  # Special case for 11, 12, 13
+  if (11..13).include?(abs_number % 100)
+    "#{number}th"
+  else
+    case abs_number % 10
+    when 1 then "#{number}st"
+    when 2 then "#{number}nd"
+    when 3 then "#{number}rd"
+    else        "#{number}th"
+    end
+  end
+end
+
 def move_to_dir(path, target_dir)
   path_name = File.basename(path)
   target_path = File.join(target_dir, path_name)
@@ -38,6 +53,14 @@ def add_local_to_watchlist(path, id = random_hex, allow_move = true)
   require_audiovisual(path)
 
   target_path = Move_when_adding && allow_move ? move_to_dir(path, File.expand_path(ENV['move_on_add'])) : path
+
+  all_lists = read_lists
+  existing_in_towatch = all_lists['towatch'].any? { |item| item['path'] == target_path }
+  if existing_in_towatch
+    existing_name = File.basename(target_path)
+    notification("Already in watchlist: “#{existing_name}”", 'Sosumi')
+    return
+  end
 
   if File.file?(target_path)
     add_file_to_watchlist(target_path, id)
@@ -83,6 +106,14 @@ def add_file_to_watchlist(file_path, id = random_hex)
 end
 
 def add_dir_to_watchlist(dir_path, id = random_hex)
+  all_lists = read_lists
+  existing_in_towatch = all_lists['towatch'].any? { |item| item['path'] == dir_path }
+  if existing_in_towatch
+    existing_name = File.basename(dir_path)
+    notification("Series already in watchlist: “#{existing_name}”", 'Sosumi')
+    return
+  end
+
   name = File.basename(dir_path)
 
   hash = {
@@ -174,20 +205,41 @@ end
 def add_url_to_watchlist(url, playlist = false, id = random_hex)
   # Split the provided text into non-empty lines.
   urls = url.split("\n").map(&:strip).reject(&:empty?)
+  added_count = 0
+  total = urls.size
+  notification("Found #{total} #{total == 1 ? 'link' : 'links'}!", 'Pop')
+
   if urls.size > 1
-    total = urls.size
     urls.each_with_index do |single_url, idx|
+      all_lists = read_lists
+      existing_in_towatch = all_lists['towatch'].any? { |item| item['url'] == single_url }
+      if existing_in_towatch
+        sleep 1
+        notification("Skipped duplicate URL: “#{single_url}”", 'Sosumi')
+        next
+      end
+
       # Generate a unique id for each URL in a multi-line input.
       name = process_single_url(single_url, playlist, random_hex)
-      # If it's the last item, include the sound.
-      if idx == total - 1
-        notification("✅️ Added the last of #{total} items as stream: “#{name}”", 'Funk')
-      else
-        notification("Added #{idx + 1} in #{total} as stream: “#{name}”")
-      end
+
+      added_count += 1
+      notification("#{ordinal(idx + 1)} of #{total} items added as stream: “#{name}”")
     end
+
+    # If it's the last item, include the sound.
+    sleep 1
+    notification("✅️ Process complete. #{added_count} added in #{total}.", 'Funk')
+
   else
-    name = process_single_url(url, playlist, id)
+    single_url = url.strip
+    all_lists = read_lists
+    existing_in_towatch = all_lists['towatch'].any? { |item| item['url'] == single_url }
+    if existing_in_towatch
+      notification("Already in watchlist: “#{single_url}”", 'Sosumi')
+      return
+    end
+
+    name = process_single_url(single_url, playlist, id)
     # Single URL is the only (and thus last) item so include the sound.
     notification("Added as stream: “#{name}”", 'Funk')
   end
