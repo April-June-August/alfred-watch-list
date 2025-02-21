@@ -207,7 +207,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   urls = url.split("\n").map(&:strip).reject(&:empty?)
   added_count = 0
   total = urls.size
-  notification("Found #{total} #{total == 1 ? 'link' : 'links'}!", 'Pop')
+  notification("Found #{total} #{total == 1 ? 'link' : 'links'}!", 'Frog')
 
   if urls.size > 1
     urls.each_with_index do |single_url, idx|
@@ -215,7 +215,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
       existing_in_towatch = all_lists['towatch'].any? { |item| item['url'] == single_url }
       if existing_in_towatch
         sleep 1
-        notification("Skipped duplicate URL: “#{single_url}”", 'Sosumi')
+        notification("Skipped duplicate URL: “#{single_url}”", '')
         next
       end
 
@@ -223,12 +223,12 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
       name = process_single_url(single_url, playlist, random_hex)
 
       added_count += 1
-      notification("#{ordinal(idx + 1)} of #{total} items added as stream: “#{name}”")
+      notification("#{ordinal(idx + 1)} of #{total} items added as stream: “#{name}”", '')
     end
 
     # If it's the last item, include the sound.
     sleep 1
-    notification("✅️ Process complete. #{added_count} added in #{total}.", 'Funk')
+    notification("✅️ Process complete. #{added_count} added in #{total}.", 'Pop')
 
   else
     single_url = url.strip
