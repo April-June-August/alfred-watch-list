@@ -13,7 +13,9 @@ Prepend_new = ENV['prepend_new_item'] == '1'
 Trash_on_watched = ENV['trash_on_watched'] == '1'
 Top_on_play = ENV['top_on_play'] == '1'
 Prefer_action_url = ENV['prefer_action_url'] == '1'
+
 Bundle_id_of_this_workflow = ENV['alfred_workflow_bundleid']
+Failed_list = File.join(ENV['alfred_workflow_data'], 'Failed.txt')
 
 FileUtils.mkpath(Lists_dir) unless Dir.exist?(Lists_dir)
 FileUtils.mkpath(File.dirname(Quick_playlist)) unless Dir.exist?(File.dirname(Quick_playlist))
@@ -170,7 +172,20 @@ def process_single_url(url, playlist, id)
   playlist_flag = playlist ? '--yes-playlist' : '--no-playlist'
 
   all_names = Open3.capture2('yt-dlp', '--get-title', playlist_flag, url).first.split("\n")
+
+  # copy the url if failed
+  # IO.popen('pbcopy', 'w') { |f| f << url } if all_names.empty?
+
+  # record a failed list for failed items
+  File.open(Failed_list, "a") do |file|
+    file.puts url
+  end
+
+  return ""
+
+  # original logic is to just error out
   error "Could not add url as stream: #{url}" if all_names.empty?
+
   # If playlist, get the playlist name instead of the the name of the first item
   name = all_names.count > 1 ? Open3.capture2('yt-dlp', '--yes-playlist', '--get-filename', '--output', '%(playlist)s', url).first.split("\n").first : all_names[0]
 
@@ -214,13 +229,16 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
       all_lists = read_lists
       existing_in_towatch = all_lists['towatch'].any? { |item| item['url'] == single_url }
       if existing_in_towatch
-        sleep 1
-        notification("Skipped duplicate URL: “#{single_url}”", '')
+        # sleep 0.1
+        # notification("Skipped duplicate URL: “#{single_url}”", '')
         next
       end
 
       # Generate a unique id for each URL in a multi-line input.
       name = process_single_url(single_url, playlist, random_hex)
+
+      # failed urls returns empty names
+      next if name.empty?
 
       added_count += 1
       notification("#{ordinal(idx + 1)} of #{total} items added as stream: “#{name}”", '')
