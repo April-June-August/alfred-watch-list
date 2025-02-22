@@ -274,6 +274,16 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   end
 end
 
+def filter_result_by_keyword(items, keyword)
+  normalized_keyword = convert_dakuten(keyword.strip).downcase
+  items.select! do |item|
+    item_title = item[:title]
+    normalized_title = convert_dakuten(item_title).downcase
+    normalized_title.include?(normalized_keyword)
+  end
+  return items
+end
+
 def display_towatch(sort = nil, keyword)
   item_list = read_lists['towatch']
 
@@ -340,12 +350,7 @@ def display_towatch(sort = nil, keyword)
 
   # Filter script_filter_items based on keyword
   unless keyword.to_s.strip.empty?
-    normalized_keyword = convert_dakuten(keyword.strip).downcase
-    script_filter_items.select! do |item|
-      item_title = item[:title]
-      normalized_title = convert_dakuten(item_title).downcase
-      normalized_title.include?(normalized_keyword)
-    end
+    script_filter_items = filter_result_by_keyword(script_filter_items, keyword)
   end
 
   puts({ items: script_filter_items, skipKnowledge: true }.to_json)
@@ -388,12 +393,7 @@ def display_watched(keyword)
 
   # Filter script_filter_items based on keyword
   unless keyword.to_s.strip.empty?
-    normalized_keyword = convert_dakuten(keyword.strip).downcase
-    script_filter_items.select! do |item|
-      item_title = item[:title]
-      normalized_title = convert_dakuten(item_title).downcase
-      normalized_title.include?(normalized_keyword)
-    end
+    script_filter_items = filter_result_by_keyword(script_filter_items, keyword)
   end
 
   puts({ items: script_filter_items }.to_json)
