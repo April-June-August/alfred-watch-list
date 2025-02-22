@@ -496,7 +496,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Watch List - Accept Multiple URLs</string>
+	<string>Watch List - Watch Later</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -537,7 +537,7 @@ paths.each { |path| add_local_to_watchlist(path, random_hex, move_paths) }</stri
 					<string>public.folder</string>
 				</array>
 				<key>name</key>
-				<string>Add to Watchlist</string>
+				<string>Add to Watchlist - Watch Later</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.action</string>
@@ -633,7 +633,7 @@ add_url_to_watchlist(ARGV[0].strip, ENV['add_url_playlist'] == '1')</string>
 				<key>acceptsurls</key>
 				<true/>
 				<key>name</key>
-				<string>Add to Watchlist</string>
+				<string>Add to Watchlist - Watch Later</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.universalaction</string>
@@ -648,7 +648,7 @@ add_url_to_watchlist(ARGV[0].strip, ENV['add_url_playlist'] == '1')</string>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:browser_keyword}</string>
+				<string>{var:keyword_prefix}{var:browser_keyword}</string>
 				<key>skipuniversalaction</key>
 				<true/>
 				<key>subtext</key>
@@ -707,7 +707,7 @@ add_url_to_watchlist(ARGV[0].strip, ENV['add_url_playlist'] == '1')</string>
 				<key>acceptsurls</key>
 				<true/>
 				<key>name</key>
-				<string>Play through Watchlist</string>
+				<string>Play through Watchlist - Watch Later</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.universalaction</string>
@@ -758,7 +758,7 @@ print id</string>
 					<string>public.folder</string>
 				</array>
 				<key>name</key>
-				<string>Play through Watchlist</string>
+				<string>Play through Watchlist - Watch Later</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.action</string>
@@ -893,7 +893,7 @@ mark_watched(ARGV[0])</string>
 			<key>config</key>
 			<dict>
 				<key>alfredfiltersresults</key>
-				<true/>
+				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
 				<integer>2</integer>
 				<key>argumenttreatemptyqueryasnil</key>
@@ -905,7 +905,7 @@ mark_watched(ARGV[0])</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>{var:play_keyword}</string>
+				<string>{var:keyword_prefix}{var:play_keyword}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -917,9 +917,7 @@ mark_watched(ARGV[0])</string>
 				<key>runningsubtext</key>
 				<string>Please wait…</string>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
-
-display_towatch(ENV['sort_order'])</string>
+				<string>ruby display_towatch.rb $1</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -931,7 +929,7 @@ display_towatch(ENV['sort_order'])</string>
 				<key>title</key>
 				<string>Play</string>
 				<key>type</key>
-				<integer>2</integer>
+				<integer>11</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -1184,7 +1182,7 @@ add_to_quick_playlist(ARGV[0])</string>
 				<key>items</key>
 				<string>[{"title":"Best Ratio First","arg":"best_ratio","subtitle":"From biggest file size to duration ratio"},{"title":"Shortest First","arg":"duration_ascending","subtitle":"From shortest duration"},{"title":"Longest First","arg":"duration_descending","subtitle":"From longest duration"},{"title":"Smallest First","arg":"size_ascending","subtitle":"From smallest file size"},{"title":"Biggest First","arg":"size_descending","subtitle":"From biggest file"}]</string>
 				<key>keyword</key>
-				<string>{var:sort_keyword}</string>
+				<string>{var:keyword_prefix}{var:sort_keyword}</string>
 				<key>matchmode</key>
 				<integer>0</integer>
 				<key>runningsubtext</key>
@@ -1281,7 +1279,7 @@ add_to_quick_playlist(ARGV[0])</string>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:edit_keyword}</string>
+				<string>{var:keyword_prefix}{var:edit_keyword}</string>
 				<key>skipuniversalaction</key>
 				<true/>
 				<key>subtext</key>
@@ -1352,7 +1350,7 @@ read_towatch_order</string>
 			<key>config</key>
 			<dict>
 				<key>alfredfiltersresults</key>
-				<true/>
+				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
 				<integer>0</integer>
 				<key>argumenttreatemptyqueryasnil</key>
@@ -1364,7 +1362,7 @@ read_towatch_order</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>{var:unwatch_keyword}</string>
+				<string>{var:keyword_prefix}{var:unwatch_keyword}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -1376,9 +1374,7 @@ read_towatch_order</string>
 				<key>runningsubtext</key>
 				<string>Please wait…</string>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
-
-display_watched</string>
+				<string>ruby display_watched.rb $1</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -1390,7 +1386,7 @@ display_watched</string>
 				<key>title</key>
 				<string>Mark Unwatched</string>
 				<key>type</key>
-				<integer>2</integer>
+				<integer>11</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -1573,6 +1569,8 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		</dict>
 		<key>12FDD660-80AA-4FAF-947F-FCF0214BBD32</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>2</integer>
 			<key>xpos</key>
 			<real>40</real>
 			<key>ypos</key>
@@ -1647,6 +1645,8 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		</dict>
 		<key>3B8DC012-8D13-4919-8EB0-AC42C883527E</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>5</integer>
 			<key>xpos</key>
 			<real>40</real>
 			<key>ypos</key>
@@ -1654,6 +1654,8 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		</dict>
 		<key>3EAD019C-8C8C-4EFB-84F6-EE99B2242EDA</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>5</integer>
 			<key>xpos</key>
 			<real>40</real>
 			<key>ypos</key>
@@ -1691,6 +1693,8 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		</dict>
 		<key>68BC0595-725B-4DDD-B33F-01C3DE55A709</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>2</integer>
 			<key>xpos</key>
 			<real>250</real>
 			<key>ypos</key>
@@ -1705,6 +1709,8 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		</dict>
 		<key>73EAEC22-6299-43A9-AE36-EF1EFD164D0E</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>5</integer>
 			<key>xpos</key>
 			<real>40</real>
 			<key>ypos</key>
@@ -1712,6 +1718,8 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		</dict>
 		<key>79817F29-F5D9-400C-9C2E-3289466CAD05</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>5</integer>
 			<key>xpos</key>
 			<real>40</real>
 			<key>ypos</key>
@@ -1835,6 +1843,8 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		</dict>
 		<key>E75EF64B-CE9C-4789-8FCC-8095D43D1FEA</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>2</integer>
 			<key>xpos</key>
 			<real>250</real>
 			<key>ypos</key>
@@ -1842,6 +1852,8 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		</dict>
 		<key>E8F9509C-843D-40C8-B5F1-6B8FC692A18C</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>2</integer>
 			<key>xpos</key>
 			<real>250</real>
 			<key>ypos</key>
@@ -1863,6 +1875,8 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		</dict>
 		<key>FA9B96C8-46F8-4275-A082-2D7CFB7B7867</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>2</integer>
 			<key>xpos</key>
 			<real>250</real>
 			<key>ypos</key>
@@ -1871,6 +1885,27 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 	</dict>
 	<key>userconfigurationconfig</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>The keyword you type to select this plalist</string>
+			<key>label</key>
+			<string>Keyword Prefix</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword_prefix</string>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>

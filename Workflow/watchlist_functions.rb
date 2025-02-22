@@ -21,6 +21,13 @@ FileUtils.mkpath(Lists_dir) unless Dir.exist?(Lists_dir)
 FileUtils.mkpath(File.dirname(Quick_playlist)) unless Dir.exist?(File.dirname(Quick_playlist))
 File.write(Lists_file, { towatch: [], watched: [] }.to_json) unless File.exist?(Lists_file)
 
+def convert_dakuten(chars)
+  return unless chars.is_a?(String)
+  chars.gsub(/\u309B/, "\u3099")
+       .gsub(/\u309C/, "\u309A")
+       .unicode_normalize(:nfc)
+end
+
 def ordinal(number)
   abs_number = number.to_i.abs
   # Special case for 11, 12, 13
@@ -267,7 +274,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   end
 end
 
-def display_towatch(sort = nil)
+def display_towatch(sort = nil, keyword)
   item_list = read_lists['towatch']
 
   if item_list.empty?
@@ -331,10 +338,20 @@ def display_towatch(sort = nil)
     script_filter_items.push(item)
   end
 
+  # Filter script_filter_items based on keyword
+  unless keyword.to_s.strip.empty?
+    normalized_keyword = convert_dakuten(keyword.strip).downcase
+    script_filter_items.select! do |item|
+      item_title = item[:title]
+      normalized_title = convert_dakuten(item_title).downcase
+      normalized_title.include?(normalized_keyword)
+    end
+  end
+
   puts({ items: script_filter_items, skipKnowledge: true }.to_json)
 end
 
-def display_watched
+def display_watched(keyword)
   item_list = read_lists['watched']
 
   if item_list.empty?
@@ -367,6 +384,16 @@ def display_watched
     end
 
     script_filter_items.push(item)
+  end
+
+  # Filter script_filter_items based on keyword
+  unless keyword.to_s.strip.empty?
+    normalized_keyword = convert_dakuten(keyword.strip).downcase
+    script_filter_items.select! do |item|
+      item_title = item[:title]
+      normalized_title = convert_dakuten(item_title).downcase
+      normalized_title.include?(normalized_keyword)
+    end
   end
 
   puts({ items: script_filter_items }.to_json)
