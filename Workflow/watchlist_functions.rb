@@ -73,8 +73,10 @@ def add_local_to_watchlist(path, id = random_hex, allow_move = true)
 
   if File.file?(target_path)
     add_file_to_watchlist(target_path, id)
+    notification("Added as file: “#{target_path}”", 'Funk')
   elsif File.directory?(target_path)
     add_dir_to_watchlist(target_path, id)
+    notification("Added as folder: “#{target_path}”", 'Funk')
   else
     error('Not a valid path')
   end
@@ -229,6 +231,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   # Split the provided text into non-empty lines.
   urls = url.split("\n").map(&:strip).reject(&:empty?)
   added_count = 0
+  skipped_account = 0
   total = urls.size
   # notification("Found #{total} #{total == 1 ? 'link' : 'links'}!", 'Frog')
 
@@ -239,6 +242,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
       if existing_in_towatch
         # sleep 0.1
         # notification("Skipped duplicate URL: “#{single_url}”", '')
+        skipped_account += 1
         next
       end
 
@@ -254,7 +258,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
 
     # If it's the last item, include the sound.
     sleep 1
-    notification("✅️ Process complete. #{added_count} added in #{total}.", 'Pop')
+    notification("✅️ Process complete. #{added_count} added, #{skipped_account} skipped in #{total}.", 'Funk')
 
   else
     single_url = url.strip
@@ -339,6 +343,7 @@ def display_towatch(sort = nil, keyword)
       item[:subtitle] = "≈ #{item_count}#{details['duration']['human']} 𐄁 #{details['url']}"
       item[:quicklookurl] = details['url']
       item[:mods][:alt] = { subtitle: 'Download stream' }
+      item[:mods][:ctrl] = { subtitle: 'Open in default browser', arg: details['url']}
       item[:action][:url] = details['url']
     when 'series'
       item[:mods][:alt] = { subtitle: 'Rescan series' }
@@ -483,6 +488,9 @@ def mark_watched(id)
     system('/usr/bin/afplay', '/System/Library/Sounds/Purr.aiff')
     return
   end
+
+  # when item is not stream and don't have to be move to the trash
+  system('/usr/bin/afplay', '/System/Library/Sounds/Purr.aiff') unless Trash_on_watched
 
   # Trash
   return unless Trash_on_watched
