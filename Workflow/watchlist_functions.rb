@@ -180,12 +180,12 @@ end
 def process_single_url(url, playlist, id)
   playlist_flag = playlist ? '--yes-playlist' : '--no-playlist'
 
-  all_names = Open3.capture2('yt-dlp', '--get-title', playlist_flag, url).first.split("\n")
+  all_title_and_channel = Open3.capture2('yt-dlp', '--get-filename', '-o', '%(title)s|||||%(channel)s', playlist_flag, url).first.split("\n")
 
   # copy the url if failed
   # IO.popen('pbcopy', 'w') { |f| f << url } if all_names.empty?
 
-  if all_names.empty?
+  if all_title_and_channel.empty?
     # record a failed list for failed items
     File.open(Failed_list, "a") do |file|
       file.puts url
@@ -194,10 +194,12 @@ def process_single_url(url, playlist, id)
   end
 
   # original logic is to just error out
-  # error "Could not add url as stream: #{url}" if all_names.empty?
+  # error "Could not add url as stream: #{url}" if all_title_and_channel.empty?
 
   # If playlist, get the playlist name instead of the the name of the first item
-  name = all_names.count > 1 ? Open3.capture2('yt-dlp', '--yes-playlist', '--get-filename', '--output', '%(playlist)s', url).first.split("\n").first : all_names[0]
+  title_and_channel = all_title_and_channel.count > 1 ? Open3.capture2('yt-dlp', '--yes-playlist', '--get-filename', '--output', '%(playlist)s|||||%(channel)s', url).first.split("\n").first : all_title_and_channel[0]
+
+  title, channel = title_and_channel.split('|||||').first(2) 
 
   durations = Open3.capture2('yt-dlp', '--get-duration', playlist_flag, url).first.split("\n")
   count = durations.count > 1 ? durations.count : nil
@@ -208,7 +210,8 @@ def process_single_url(url, playlist, id)
   stream_hash = {
     'id' => id,
     'type' => 'stream',
-    'name' => name,
+    'name' => title,
+    'channel' => channel,
     'path' => nil,
     'count' => count,
     'url' => url,
@@ -224,7 +227,7 @@ def process_single_url(url, playlist, id)
   }
 
   add_to_list(stream_hash, 'towatch', Prepend_new)
-  name
+  title
 end
 
 def add_url_to_watchlist(url, playlist = false, id = random_hex)
@@ -247,13 +250,13 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
       end
 
       # Generate a unique id for each URL in a multi-line input.
-      name = process_single_url(single_url, playlist, random_hex)
+      title = process_single_url(single_url, playlist, random_hex)
 
       # failed urls returns empty names
-      next if name.empty?
+      next if title.empty?
 
       added_count += 1
-      notification("#{ordinal(idx + 1)} of #{total} items added as stream: “#{name}”", '')
+      notification("#{ordinal(idx + 1)} of #{total} items added as stream: “#{title}”", '')
     end
 
     # If it's the last item, include the sound.
@@ -278,14 +281,15 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   end
 end
 
-def filter_result_by_keyword(items, keyword)
+def is_a_match_of_keyword(item, keyword)
   normalized_keyword = convert_dakuten(keyword.strip).downcase
-  items.select! do |item|
-    item_title = item[:title]
-    normalized_title = convert_dakuten(item_title).downcase
-    normalized_title.include?(normalized_keyword)
-  end
-  return items
+  item_name = item['name']
+  normalized_name = convert_dakuten(item_name).downcase
+
+  item_channel = item['channel'] || ''
+  normalized_channel = convert_dakuten(item_channel).downcase
+
+  normalized_name.include?(normalized_keyword) || normalized_channel.include?(normalized_keyword)
 end
 
 def display_towatch(sort = nil, keyword)
@@ -315,6 +319,10 @@ def display_towatch(sort = nil, keyword)
     end
 
   hash_to_output.each do |details|
+    unless keyword.to_s.strip.empty?
+      next unless is_a_match_of_keyword(details, keyword)
+    end
+
     item_count = details['count'].nil? ? '' : "(#{details['count']}) 𐄁 "
 
     # Common values
@@ -340,7 +348,7 @@ def display_towatch(sort = nil, keyword)
       item[:mods][:alt] = { subtitle: 'This modifier is only available on series and streams', valid: false }
       item[:action][:auto] = Prefer_action_url && !details['url'].nil? ? details['url'] : details['path']
     when 'stream'
-      item[:subtitle] = "≈ #{item_count}#{details['duration']['human']} 𐄁 #{details['url']}"
+      item[:subtitle] = "≈ #{item_count}#{details['duration']['human']}#{details['channel'].nil? ? '' : ' 𐄁 '}#{details['channel'] || ''} 𐄁 #{details['url']}"
       item[:quicklookurl] = details['url']
       item[:mods][:alt] = { subtitle: 'Download stream' }
       item[:mods][:ctrl] = { subtitle: 'Open in default browser', arg: details['url']}
@@ -351,11 +359,6 @@ def display_towatch(sort = nil, keyword)
     end
 
     script_filter_items.push(item)
-  end
-
-  # Filter script_filter_items based on keyword
-  unless keyword.to_s.strip.empty?
-    script_filter_items = filter_result_by_keyword(script_filter_items, keyword)
   end
 
   puts({ items: script_filter_items, skipKnowledge: true }.to_json)
@@ -372,6 +375,10 @@ def display_watched(keyword)
   script_filter_items = []
 
   item_list.each do |details|
+    unless keyword.to_s.strip.empty?
+      next unless is_a_match_of_keyword(details, keyword)
+    end
+
     # Common values
     item = {
       title: details['name'],
@@ -513,7 +520,10 @@ def mark_unwatched(id)
   item_index = find_index(id, 'towatch', all_lists)
   item = all_lists['towatch'][item_index]
 
-  return if item['type'] == 'stream'
+  if item['type'] == 'stream'
+    system('/usr/bin/afplay', '/System/Library/Sounds/Submarine.aiff')
+    return
+  end
 
   if item['trashed_name']
     trashed_path = File.join(ENV['HOME'], '.Trash', item['trashed_name'])
@@ -589,6 +599,7 @@ def play_quick_playlist
 
   ids.each do |id|
     system('osascript', '-l', 'JavaScript', '-e', "Application('com.runningwithcrayons.Alfred').runTrigger('play_id', { inWorkflow: '#{Bundle_id_of_this_workflow}', withArgument: '#{id}' })")
+    system('/usr/bin/afplay', '/System/Library/Sounds/Tink.aiff')
   end
 end
 
