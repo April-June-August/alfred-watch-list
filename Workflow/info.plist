@@ -1910,7 +1910,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>wlp</string>
+				<string>p</string>
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>
@@ -1931,7 +1931,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>wlu</string>
+				<string>u</string>
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>
@@ -1952,7 +1952,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>wlb</string>
+				<string>b</string>
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>
@@ -1973,7 +1973,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>wls</string>
+				<string>s</string>
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>
@@ -1994,7 +1994,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>wle</string>
+				<string>e</string>
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>

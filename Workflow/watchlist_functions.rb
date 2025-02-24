@@ -113,7 +113,7 @@ def add_file_to_watchlist(file_path, id = random_hex)
     'ratio' => size_duration_ratio
   }
 
-  add_to_list(hash, 'towatch')
+  add_to_list(hash, 'towatch', Prepend_new)
 end
 
 def add_dir_to_watchlist(dir_path, id = random_hex)
@@ -145,7 +145,7 @@ def add_dir_to_watchlist(dir_path, id = random_hex)
     'ratio' => nil
   }
 
-  add_to_list(hash, 'towatch')
+  add_to_list(hash, 'towatch', Prepend_new)
   update_series(id)
 end
 
@@ -223,7 +223,7 @@ def process_single_url(url, playlist, id)
     'ratio' => nil
   }
 
-  add_to_list(stream_hash, 'towatch')
+  add_to_list(stream_hash, 'towatch', Prepend_new)
   name
 end
 
@@ -405,7 +405,7 @@ def display_watched(keyword)
 end
 
 def play(id, send_to_watched = true)
-  switch_list(id, 'towatch', 'towatch') if Top_on_play
+  Top_on_play ? switch_list(id, 'towatch', 'towatch', true) : switch_list(id, 'towatch', 'towatch', false)
 
   all_lists = read_lists
   item_index = find_index(id, 'towatch', all_lists)
@@ -423,7 +423,7 @@ def play(id, send_to_watched = true)
   when 'series'
     if !File.exist?(item['path']) && send_to_watched == true
       mark_watched(id)
-      abort 'Marking as watched since the directory no longer exists'
+      error 'Marking as watched since the directory no longer exists'
     end
 
     first_file = list_audiovisual_files(item['path']).first
@@ -472,7 +472,7 @@ def play_item(type, path)
 end
 
 def mark_watched(id)
-  switch_list(id, 'towatch', 'watched')
+  switch_list(id, 'towatch', 'watched', true)
 
   all_lists = read_lists
   item_index = find_index(id, 'watched', all_lists)
@@ -504,7 +504,7 @@ def mark_watched(id)
 end
 
 def mark_unwatched(id)
-  switch_list(id, 'watched', 'towatch')
+  switch_list(id, 'watched', 'towatch', true)
 
   # Try to recover trashed file
   return unless Trash_on_watched
@@ -555,7 +555,7 @@ def write_towatch_order(text_order)
     item_index = find_index(id, 'towatch', all_lists)
     item = all_lists['towatch'][item_index]
 
-    abort "Unrecognised id: #{id}" if item_index.nil?
+    error "Unrecognised id: #{id}" if item_index.nil?
     item['name'] = name
 
     new_array.push(item)
@@ -648,7 +648,7 @@ def write_lists(new_lists, lists_file = Lists_file)
   File.write(lists_file, JSON.pretty_generate(new_lists))
 end
 
-def add_to_list(new_hash, list, prepending = Prepend_new)
+def add_to_list(new_hash, list, prepending)
   all_lists = read_lists
   all_lists[list] = prepending ? [new_hash].concat(all_lists[list]) : all_lists[list].concat([new_hash])
   write_lists(all_lists)
@@ -666,15 +666,16 @@ def delete_from_list(id, list)
   write_lists(all_lists)
 end
 
-def switch_list(id, origin_list, target_list)
+def switch_list(id, origin_list, target_list, to_top_of_list)
   all_lists = read_lists
   item_index = find_index(id, origin_list, all_lists)
 
-  abort 'Item no longer exists' if item_index.nil? # Detect if an item no longer exists before trying to move. Fix for cases where the same item is chosen a second time before having finished playing.
+  # Detect if an item no longer exists before trying to move. Fix for cases where the same item is chosen a second time before having finished playing.
+  error 'Item no longer exists' if item_index.nil?
 
   item = all_lists[origin_list][item_index]
   delete_from_list(id, origin_list)
-  add_to_list(item, target_list, true)
+  add_to_list(item, target_list, to_top_of_list)
 end
 
 def trash(path)
