@@ -361,7 +361,11 @@ def display_towatch(sort = nil, keyword)
     script_filter_items.push(item)
   end
 
-  puts({ items: script_filter_items, skipKnowledge: true }.to_json)
+  if script_filter_items.empty?
+    puts({ items: [{ title: 'No items Found', subtitle: "Nothing found with the query #{keyword}", valid: false }] }.to_json)
+  else
+    puts({ items: script_filter_items, skipKnowledge: true }.to_json)
+  end
 end
 
 def display_watched(keyword)
@@ -403,12 +407,11 @@ def display_watched(keyword)
     script_filter_items.push(item)
   end
 
-  # Filter script_filter_items based on keyword
-  unless keyword.to_s.strip.empty?
-    script_filter_items = filter_result_by_keyword(script_filter_items, keyword)
+  if script_filter_items.empty?
+    puts({ items: [{ title: 'No items Found', subtitle: "Nothing found with the query #{keyword}", valid: false }] }.to_json)
+  else
+    puts({ items: script_filter_items, skipKnowledge: true }.to_json)
   end
-
-  puts({ items: script_filter_items }.to_json)
 end
 
 def play(id, send_to_watched = true)
@@ -513,15 +516,19 @@ end
 def mark_unwatched(id)
   switch_list(id, 'watched', 'towatch', true)
 
+  if !Trash_on_watched
+    system('/usr/bin/afplay', '/System/Library/Sounds/Tink.aiff')
+    return
+  end
+
   # Try to recover trashed file
-  return unless Trash_on_watched
 
   all_lists = read_lists
   item_index = find_index(id, 'towatch', all_lists)
   item = all_lists['towatch'][item_index]
 
   if item['type'] == 'stream'
-    system('/usr/bin/afplay', '/System/Library/Sounds/Submarine.aiff')
+    system('/usr/bin/afplay', '/System/Library/Sounds/Tink.aiff')
     return
   end
 
@@ -537,7 +544,7 @@ def mark_unwatched(id)
   error('Could not recover from Trash because another item exists at original location') if File.exist?(item['path'])
 
   File.rename(trashed_path, item['path'])
-  system('/usr/bin/afplay', '/System/Library/Sounds/Submarine.aiff')
+  system('/usr/bin/afplay', '/System/Library/Sounds/Tink.aiff')
 end
 
 def download_stream(id)
@@ -589,6 +596,7 @@ end
 def add_to_quick_playlist(id)
   verify_quick_playlist
   File.write(Quick_playlist, "#{id}\n", mode: 'a')
+  system('/usr/bin/afplay', '/System/Library/Sounds/Frog.aiff')
 end
 
 def play_quick_playlist
