@@ -2041,7 +2041,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 				<key>filtermode</key>
 				<integer>1</integer>
 				<key>placeholder</key>
-				<string>Defaults to the workflow cache folder</string>
+				<string>Defaults to the workflow data folder</string>
 				<key>required</key>
 				<false/>
 			</dict>
