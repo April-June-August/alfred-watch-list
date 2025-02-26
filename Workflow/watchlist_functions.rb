@@ -296,7 +296,7 @@ def display_towatch(sort = nil, keyword)
   item_list = read_lists['towatch']
 
   if item_list.empty?
-    puts({ items: [{ title: 'Play (wlp)', subtitle: 'Nothing to watch', valid: false }] }.to_json)
+    puts({ items: [{ title: 'Play (p)', subtitle: 'Nothing to watch', valid: false }] }.to_json)
     exit 0
   end
 
@@ -372,7 +372,7 @@ def display_watched(keyword)
   item_list = read_lists['watched']
 
   if item_list.empty?
-    puts({ items: [{ title: 'Mark unwatched (wlu)', subtitle: 'You have no unwatched files', valid: false }] }.to_json)
+    puts({ items: [{ title: 'Mark unwatched (u)', subtitle: 'You have no watched items', valid: false }] }.to_json)
     exit 0
   end
 
@@ -387,6 +387,9 @@ def display_watched(keyword)
     item = {
       title: details['name'],
       arg: details['id'],
+      icon: {
+        path: "./icon_gray.png"
+      },
       mods: {},
       action: {}
     }
@@ -397,7 +400,7 @@ def display_watched(keyword)
       item[:mods][:ctrl] = { subtitle: 'This item has no origin url', valid: false }
       item[:mods][:alt] = { subtitle: 'This item has no origin url', valid: false }
     else
-      item[:subtitle] = details['type'] == 'stream' ? details['url'] : "#{details['url']} 𐄁 #{details['path']}"
+      item[:subtitle] = details['type'] == 'stream' ? "#{details['channel'] || ''}#{details['channel'].nil? ? '' : ' 𐄁 '}#{details['url']}" : "#{details['url']} 𐄁 #{details['path']}"
       item[:quicklookurl] = details['url']
       item[:mods][:ctrl] = { subtitle: 'Open link in default browser', arg: details['url'] }
       item[:mods][:alt] = { subtitle: 'Copy link to clipboard', arg: details['url'] }
@@ -517,7 +520,7 @@ def mark_unwatched(id)
   switch_list(id, 'watched', 'towatch', true)
 
   if !Trash_on_watched
-    system('/usr/bin/afplay', '/System/Library/Sounds/Tink.aiff')
+    system('/usr/bin/afplay', '/System/Library/Sounds/Purr.aiff')
     return
   end
 
@@ -528,7 +531,7 @@ def mark_unwatched(id)
   item = all_lists['towatch'][item_index]
 
   if item['type'] == 'stream'
-    system('/usr/bin/afplay', '/System/Library/Sounds/Tink.aiff')
+    system('/usr/bin/afplay', '/System/Library/Sounds/Purr.aiff')
     return
   end
 
@@ -544,7 +547,7 @@ def mark_unwatched(id)
   error('Could not recover from Trash because another item exists at original location') if File.exist?(item['path'])
 
   File.rename(trashed_path, item['path'])
-  system('/usr/bin/afplay', '/System/Library/Sounds/Tink.aiff')
+  system('/usr/bin/afplay', '/System/Library/Sounds/Purr.aiff')
 end
 
 def download_stream(id)

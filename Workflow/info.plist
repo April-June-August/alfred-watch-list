@@ -819,7 +819,7 @@ print id</string>
 				<key>script</key>
 				<string>require "#{Dir.pwd}/watchlist_functions.rb"
 
-play(ARGV[0], send_to_watched = false) unless play_quick_playlist</string>
+play(ARGV[0], send_to_watched = ENV['mark_as_watched_after_playing'] == '1') unless play_quick_playlist</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -2154,6 +2154,25 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<string>checkbox</string>
 			<key>variable</key>
 			<string>trash_on_watched</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string>Mark as watched after playing</string>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string></string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>mark_as_watched_after_playing</string>
 		</dict>
 		<dict>
 			<key>config</key>
