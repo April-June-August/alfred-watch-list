@@ -2157,7 +2157,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 				<string>Send items to trash after watching</string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Only apply to local media files</string>
 			<key>label</key>
 			<string></string>
 			<key>type</key>
