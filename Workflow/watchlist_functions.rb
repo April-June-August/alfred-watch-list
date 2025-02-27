@@ -6,7 +6,7 @@ require 'open3'
 
 Lists_dir = ENV['lists_dir'].empty? ? ENV['alfred_workflow_data'] : ENV['lists_dir']
 Lists_file = "#{Lists_dir}/watchlist.json".freeze
-Maximum_watched = Integer(ENV['maximum_watched'])
+# Maximum_watched = Integer(ENV['maximum_watched'])
 Quick_playlist = File.join(ENV['alfred_workflow_cache'], 'quick_playlist.txt')
 Move_when_adding = !ENV['move_on_add'].empty?
 Prepend_new = ENV['prepend_new_item'] == '1'
@@ -43,6 +43,12 @@ def ordinal(number)
   end
 end
 
+def already_exist(path_or_url)
+  all_lists = read_lists
+  # true if its url or path in either towatch or watched list
+  all_lists['towatch'].any? { |item| item['path'] == path_or_url } || all_lists['towatch'].any? { |item| item['url'] == path_or_url } || all_lists['watched'].any? { |item| item['path'] == path_or_url } || all_lists['watched'].any? { |item| item['url'] == path_or_url }
+end
+
 def move_to_dir(path, target_dir)
   path_name = File.basename(path)
   target_path = File.join(target_dir, path_name)
@@ -64,8 +70,7 @@ def add_local_to_watchlist(path, id = random_hex, allow_move = true)
   target_path = Move_when_adding && allow_move ? move_to_dir(path, File.expand_path(ENV['move_on_add'])) : path
 
   all_lists = read_lists
-  existing_in_towatch = all_lists['towatch'].any? { |item| item['path'] == target_path }
-  if existing_in_towatch
+  if already_exist(target_path)
     existing_name = File.basename(target_path)
     notification("Already in watchlist: “#{existing_name}”", 'Sosumi')
     return
@@ -118,8 +123,7 @@ end
 
 def add_dir_to_watchlist(dir_path, id = random_hex)
   all_lists = read_lists
-  existing_in_towatch = all_lists['towatch'].any? { |item| item['path'] == dir_path }
-  if existing_in_towatch
+  if already_exist(dir_path)
     existing_name = File.basename(dir_path)
     notification("Series already in watchlist: “#{existing_name}”", 'Sosumi')
     return
@@ -241,8 +245,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   if urls.size > 1
     urls.each_with_index do |single_url, idx|
       all_lists = read_lists
-      existing_in_towatch = all_lists['towatch'].any? { |item| item['url'] == single_url }
-      if existing_in_towatch
+      if already_exist(single_url)
         # sleep 0.1
         # notification("Skipped duplicate URL: “#{single_url}”", '')
         skipped_account += 1
@@ -266,8 +269,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   else
     single_url = url.strip
     all_lists = read_lists
-    existing_in_towatch = all_lists['towatch'].any? { |item| item['url'] == single_url }
-    if existing_in_towatch
+    if already_exist(single_url)
       notification("Already in watchlist: “#{single_url}”", 'Sosumi')
       return
     end

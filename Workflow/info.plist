@@ -2092,31 +2092,6 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>defaultvalue</key>
-				<integer>20</integer>
-				<key>markercount</key>
-				<integer>21</integer>
-				<key>maxvalue</key>
-				<integer>100</integer>
-				<key>minvalue</key>
-				<integer>1</integer>
-				<key>onlystoponmarkers</key>
-				<true/>
-				<key>showmarkers</key>
-				<true/>
-			</dict>
-			<key>description</key>
-			<string>Maximum number of items to show in the watched list.</string>
-			<key>label</key>
-			<string>Watched Items</string>
-			<key>type</key>
-			<string>slider</string>
-			<key>variable</key>
-			<string>maximum_watched</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>default</key>
 				<true/>
 				<key>required</key>
@@ -2163,7 +2138,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 				<string>Move item to top of the list when playing</string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Watched items will be moved to the bottom of the list if unchecked</string>
 			<key>label</key>
 			<string>Playing</string>
 			<key>type</key>
