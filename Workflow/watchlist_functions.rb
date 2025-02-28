@@ -15,7 +15,7 @@ Top_on_play = ENV['top_on_play'] == '1'
 Prefer_action_url = ENV['prefer_action_url'] == '1'
 
 Bundle_id_of_this_workflow = ENV['alfred_workflow_bundleid']
-Failed_list = File.join(ENV['alfred_workflow_data'], 'Failed.txt')
+Failed_list = File.join(Lists_dir, 'Failed.txt')
 
 FileUtils.mkpath(Lists_dir) unless Dir.exist?(Lists_dir)
 FileUtils.mkpath(File.dirname(Quick_playlist)) unless Dir.exist?(File.dirname(Quick_playlist))
@@ -184,15 +184,26 @@ end
 def process_single_url(url, playlist, id)
   playlist_flag = playlist ? '--yes-playlist' : '--no-playlist'
 
-  all_title_and_channel = Open3.capture2('yt-dlp', '--get-filename', '-o', '%(title)s|||||%(channel)s', playlist_flag, url).first.split("\n")
+  stdout, stderr, status = Open3.capture3('/opt/homebrew/bin/yt-dlp', '--get-filename', '-o', '%(title)s|||||%(channel)s', playlist_flag, url)
+  if status.success?
+    all_title_and_channel = stdout.split("\n")
+  else
+    notification("❌️ ERROR: “#{stderr}”", 'Basso')
+    File.open(Failed_list, "a") do |file|
+      file.puts "#{url} “failed when extracting titles and channel” #{stderr}\n"
+    end
+    return ""
+  end
 
   # copy the url if failed
   # IO.popen('pbcopy', 'w') { |f| f << url } if all_names.empty?
 
+  # command succeeded but result empty
   if all_title_and_channel.empty?
     # record a failed list for failed items
     File.open(Failed_list, "a") do |file|
-      file.puts url
+      notification("❌️ ERROR: “succeeded but result empty”", 'Basso')
+      file.puts "#{url} “succeeded but result empty”\n"
     end
     return ""
   end
@@ -201,11 +212,45 @@ def process_single_url(url, playlist, id)
   # error "Could not add url as stream: #{url}" if all_title_and_channel.empty?
 
   # If playlist, get the playlist name instead of the the name of the first item
-  title_and_channel = all_title_and_channel.count > 1 ? Open3.capture2('yt-dlp', '--yes-playlist', '--get-filename', '--output', '%(playlist)s|||||%(channel)s', url).first.split("\n").first : all_title_and_channel[0]
 
-  title, channel = title_and_channel.split('|||||').first(2) 
+  # title_and_channel = all_title_and_channel.count > 1 ? Open3.capture2('/opt/homebrew/bin/yt-dlp', '--yes-playlist', '--get-filename', '--output', '%(playlist)s|||||%(channel)s', url).first.split("\n").first : all_title_and_channel[0]
 
-  durations = Open3.capture2('yt-dlp', '--get-duration', playlist_flag, url).first.split("\n")
+  if all_title_and_channel.count > 1
+    stdout, stderr, status = Open3.capture3('/opt/homebrew/bin/yt-dlp', '--yes-playlist', '--get-filename', '--output', '%(playlist)s|||||%(channel)s', url)
+
+    if status.success?
+      title_and_channel = stdout.split("\n").first
+    else
+      notification("❌️ ERROR: “failed when extracting playlist name and channel”", 'Basso')
+
+      File.open(Failed_list, "a") do |file|
+        file.puts "#{url} “failed when extracting playlist name and channel” #{stderr}\n"
+      end
+
+      return ""
+    end
+  else
+    title_and_channel = all_title_and_channel[0]
+  end
+
+  title, channel = title_and_channel.split('|||||').first(2)
+
+  # durations = Open3.capture2('/opt/homebrew/bin/yt-dlp', '--get-duration', playlist_flag, url).first.split("\n")
+
+  stdout, stderr, status = Open3.capture3('/opt/homebrew/bin/yt-dlp', '--get-duration', playlist_flag, url)
+
+  if status.success?
+    durations = stdout.split("\n")
+  else
+    notification("❌️ ERROR: “failed when extracting duration”", 'Basso')
+
+    File.open(Failed_list, "a") do |file|
+      file.puts "#{url} “failed when extracting duration” #{stderr}\n"
+    end
+
+    return ""
+  end
+
   count = durations.count > 1 ? durations.count : nil
 
   duration_machine = durations.map { |d| colons_to_seconds(d) }.inject(0, :+)
@@ -239,6 +284,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
   urls = url.split("\n").map(&:strip).reject(&:empty?)
   added_count = 0
   skipped_account = 0
+  failed_account = 0
   total = urls.size
   # notification("Found #{total} #{total == 1 ? 'link' : 'links'}!", 'Frog')
 
@@ -256,6 +302,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
       title = process_single_url(single_url, playlist, random_hex)
 
       # failed urls returns empty names
+      failed_account += 1 if title.empty?
       next if title.empty?
 
       added_count += 1
@@ -264,7 +311,7 @@ def add_url_to_watchlist(url, playlist = false, id = random_hex)
 
     # If it's the last item, include the sound.
     sleep 1
-    notification("✅️ Process complete. #{added_count} added, #{skipped_account} skipped in #{total}.", 'Funk')
+    notification("✅️ Process complete. #{added_count} added, #{failed_account} failed, #{skipped_account} skipped in #{total}.", 'Funk')
 
   else
     single_url = url.strip
