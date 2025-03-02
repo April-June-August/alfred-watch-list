@@ -408,6 +408,16 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>61ED305A-ED56-4467-AF78-294F6E68C4B4</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<true/>
+			</dict>
 		</array>
 		<key>E8E10708-17D8-43EA-AAEE-2B2CE9779BB8</key>
 		<array>
@@ -1513,6 +1523,32 @@ mark_unwatched(ARGV[0])</string>
 			<key>version</key>
 			<integer>3</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+
+delete_from_list(ARGV[0], "watched")
+system('/usr/bin/afplay', '/System/Library/Sounds/Frog.aiff')</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>2</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>61ED305A-ED56-4467-AF78-294F6E68C4B4</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>## Usage
@@ -1702,6 +1738,13 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<real>40</real>
 			<key>ypos</key>
 			<real>265</real>
+		</dict>
+		<key>61ED305A-ED56-4467-AF78-294F6E68C4B4</key>
+		<dict>
+			<key>xpos</key>
+			<real>520</real>
+			<key>ypos</key>
+			<real>2255</real>
 		</dict>
 		<key>6393BD32-E835-4C08-BB48-E69D674DB1C7</key>
 		<dict>

@@ -439,7 +439,11 @@ def display_watched(keyword)
       icon: {
         path: "./icon_gray.png"
       },
-      mods: {},
+      mods: {
+        cmd: {
+          subtitle: 'Delete item'
+        }
+      },
       action: {}
     }
 
@@ -726,7 +730,11 @@ def add_to_list(new_hash, list, prepending)
 end
 
 def find_index(id, list, all_lists)
-  all_lists[list].index { |item| item['id'] == id }
+  index = all_lists[list].index { |item| item['id'] == id }
+
+  # Detect if an item no longer exists before trying to move. Fix for cases where the same item is chosen a second time before having finished playing.
+  error 'Item no longer exists' if index.nil?
+  return index
 end
 
 def delete_from_list(id, list)
@@ -740,10 +748,6 @@ end
 def switch_list(id, origin_list, target_list, to_top_of_list)
   all_lists = read_lists
   item_index = find_index(id, origin_list, all_lists)
-
-  # Detect if an item no longer exists before trying to move. Fix for cases where the same item is chosen a second time before having finished playing.
-  error 'Item no longer exists' if item_index.nil?
-
   item = all_lists[origin_list][item_index]
   delete_from_list(id, origin_list)
   add_to_list(item, target_list, to_top_of_list)
