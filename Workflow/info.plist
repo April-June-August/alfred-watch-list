@@ -560,7 +560,7 @@ paths.each { |path| add_local_to_watchlist(path, random_hex, move_paths) }</stri
 					<string>public.folder</string>
 				</array>
 				<key>name</key>
-				<string>Add to Watchlist - Watch Later</string>
+				<string>Add to - {const:alfred_workflow_name}</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.action</string>
@@ -671,7 +671,7 @@ add_url_to_watchlist(ARGV[0].strip, ENV['add_url_playlist'] == '1')</string>
 				<key>acceptsurls</key>
 				<true/>
 				<key>name</key>
-				<string>Add to Watchlist - Watch Later</string>
+				<string>Add to - {const:alfred_workflow_name}</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.universalaction</string>
@@ -745,7 +745,7 @@ add_url_to_watchlist(ARGV[0].strip, ENV['add_url_playlist'] == '1')</string>
 				<key>acceptsurls</key>
 				<true/>
 				<key>name</key>
-				<string>Play through Watchlist - Watch Later</string>
+				<string>Play through - {const:alfred_workflow_name}</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.universalaction</string>
@@ -796,7 +796,7 @@ print id</string>
 					<string>public.folder</string>
 				</array>
 				<key>name</key>
-				<string>Play through Watchlist - Watch Later</string>
+				<string>Play through - {const:alfred_workflow_name}</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.action</string>
