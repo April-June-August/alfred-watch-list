@@ -1557,7 +1557,7 @@ Add files, series (folders), and streams (URLs) to your watchlist via the [Unive
 
 ![Universal action for adding to watchlist](images/about/ua.png)
 
-Search through and play items from your list via the `wlp` keyword.
+Search through and play items from your list via the `watchp` keyword.
 
 ![Showing items to play](images/about/wlp.png)
 
@@ -1568,19 +1568,19 @@ Search through and play items from your list via the `wlp` keyword.
 * &lt;kbd&gt;⇧&lt;/kbd&gt;&lt;kbd&gt;↩&lt;/kbd&gt; Add to temporary playlist. Repeat for all desired items then &lt;kbd&gt;↩&lt;/kbd&gt; to play in order. An unplayed playlist resets after a few minutes.
 * &lt;kbd&gt;⌘&lt;/kbd&gt;&lt;kbd&gt;Y&lt;/kbd&gt; (or tap &lt;kbd&gt;⇧&lt;/kbd&gt;) Quick Look files and streams.
 
-Sort your list in different ways with `wls`. Sorting is temporary and does not affect the main list’s order.
+Sort your list in different ways with `watchs`. Sorting is temporary and does not affect the main list’s order.
 
 ![Showing sort options](images/about/wls.png)
 
-Add the frontmost browser URL to the list with `wlb`.
+Add the frontmost browser URL to the list with `watchb`.
 
 ![Frontmost browser tab](images/about/wlb.png)
 
-Manually edit the list via the `wle` keyword. A Text View will open for you to reorder and rename at will. Keep the initial six characters and colon together with a title. &lt;kbd&gt;⌘&lt;/kbd&gt;&lt;kbd&gt;↩&lt;/kbd&gt; to apply the changes.
+Manually edit the list via the `watche` keyword. A Text View will open for you to reorder and rename at will. Keep the initial six characters and colon together with a title. &lt;kbd&gt;⌘&lt;/kbd&gt;&lt;kbd&gt;↩&lt;/kbd&gt; to apply the changes.
 
 ![Edit list](images/about/wle.png)
 
-Undo marking an item as watched via the `wlu` keyword. &lt;kbd&gt;↩&lt;/kbd&gt; to mark not watched and try to recover from the trash.
+Undo marking an item as watched via the `watchu` keyword. &lt;kbd&gt;↩&lt;/kbd&gt; to mark not watched and try to recover from the trash.
 
 ![Showing watched items](images/about/wlu.png)
 
@@ -1967,7 +1967,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string></string>
+				<string>watch</string>
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>

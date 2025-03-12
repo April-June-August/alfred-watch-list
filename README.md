@@ -10,7 +10,7 @@ Add files, series (folders), and streams (URLs) to your watchlist via the [Unive
 
 ![Universal action for adding to watchlist](Workflow/images/about/ua.png)
 
-Search through and play items from your list via the `wlp` keyword.
+Search through and play items from your list via the `watchp` keyword.
 
 ![Showing items to play](Workflow/images/about/wlp.png)
 
@@ -21,19 +21,19 @@ Search through and play items from your list via the `wlp` keyword.
 * <kbd>⇧</kbd><kbd>↩&#xFE0E;</kbd> Add to temporary playlist. Repeat for all desired items then <kbd>↩&#xFE0E;</kbd> to play in order. An unplayed playlist resets after a few minutes.
 * <kbd>⌘</kbd><kbd>Y</kbd> (or tap <kbd>⇧</kbd>) Quick Look files and streams.
 
-Sort your list in different ways with `wls`. Sorting is temporary and does not affect the main list’s order.
+Sort your list in different ways with `watchs`. Sorting is temporary and does not affect the main list’s order.
 
 ![Showing sort options](Workflow/images/about/wls.png)
 
-Add the frontmost browser URL to the list with `wlb`.
+Add the frontmost browser URL to the list with `watchb`.
 
 ![Frontmost browser tab](Workflow/images/about/wlb.png)
 
-Manually edit the list via the `wle` keyword. A Text View will open for you to reorder and rename at will. Keep the initial six characters and colon together with a title. <kbd>⌘</kbd><kbd>↩&#xFE0E;</kbd> to apply the changes.
+Manually edit the list via the `watche` keyword. A Text View will open for you to reorder and rename at will. Keep the initial six characters and colon together with a title. <kbd>⌘</kbd><kbd>↩&#xFE0E;</kbd> to apply the changes.
 
 ![Edit list](Workflow/images/about/wle.png)
 
-Undo marking an item as watched via the `wlu` keyword. <kbd>↩&#xFE0E;</kbd> to mark not watched and try to recover from the trash.
+Undo marking an item as watched via the `watchu` keyword. <kbd>↩&#xFE0E;</kbd> to mark not watched and try to recover from the trash.
 
 ![Showing watched items](Workflow/images/about/wlu.png)
 
