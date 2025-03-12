@@ -2,7 +2,7 @@
 
 Play and manage local media and streams
 
-[⤓ Install on the Alfred Gallery](https://alfred.app/workflows/vitor/watch-list)
+[➡️ Download the latest release](../../releases/latest)
 
 ## Usage
 
