@@ -758,7 +758,7 @@ def trash(path)
 end
 
 def notification(message, sound = '')
-  system("#{Dir.pwd}/notificator", '--message', message, '--title', ENV['alfred_workflow_name'], '--sound', sound)
+  system("#{Dir.pwd}/scripts/notificator", '--message', message, '--title', ENV['alfred_workflow_name'], '--sound', sound)
 end
 
 def error(message)
