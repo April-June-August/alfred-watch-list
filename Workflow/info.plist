@@ -517,7 +517,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 paths = ENV['prepend_new_item'] == '1' ? ARGV.sort.reverse : ARGV.sort
 move_paths = ENV['do_not_move'] == '1' ? false : true
@@ -629,7 +629,7 @@ paths.each { |path| add_local_to_watchlist(path, random_hex, move_paths) }</stri
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 add_url_to_watchlist(ARGV[0].strip, ENV['add_url_playlist'] == '1')</string>
 				<key>scriptargtype</key>
@@ -710,7 +710,7 @@ add_url_to_watchlist(ARGV[0].strip, ENV['add_url_playlist'] == '1')</string>
 				<key>runningsubtext</key>
 				<string>Loading from Browser and Clipboard…</string>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/extract_url_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/extract_url_functions.rb"
 
 show_options</string>
 				<key>scriptargtype</key>
@@ -764,7 +764,7 @@ show_options</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 id = random_hex
 
@@ -815,7 +815,7 @@ print id</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 id = random_hex
 add_url_to_watchlist(ARGV[0].strip, false, id)
@@ -857,7 +857,7 @@ print id</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 play(ARGV[0], send_to_watched = ENV['mark_as_watched_after_playing'] == '1') unless play_quick_playlist</string>
 				<key>scriptargtype</key>
@@ -897,7 +897,7 @@ play(ARGV[0], send_to_watched = ENV['mark_as_watched_after_playing'] == '1') unl
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 mark_watched(ARGV[0])</string>
 				<key>scriptargtype</key>
@@ -957,7 +957,7 @@ mark_watched(ARGV[0])</string>
 				<key>runningsubtext</key>
 				<string>Please wait…</string>
 				<key>script</key>
-				<string>ruby display_towatch.rb $1</string>
+				<string>ruby scripts/display_towatch.rb $1</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -1024,7 +1024,7 @@ mark_watched(ARGV[0])</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 id = ARGV[0]
 all_lists = read_lists
@@ -1193,7 +1193,7 @@ function run(argv) {
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 add_to_quick_playlist(ARGV[0])</string>
 				<key>scriptargtype</key>
@@ -1344,7 +1344,7 @@ add_to_quick_playlist(ARGV[0])</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 write_towatch_order(ARGV[0])</string>
 				<key>scriptargtype</key>
@@ -1369,7 +1369,7 @@ write_towatch_order(ARGV[0])</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 read_towatch_order</string>
 				<key>scriptargtype</key>
@@ -1414,7 +1414,7 @@ read_towatch_order</string>
 				<key>runningsubtext</key>
 				<string>Please wait…</string>
 				<key>script</key>
-				<string>ruby display_watched.rb $1</string>
+				<string>ruby scripts/display_watched.rb $1</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -1445,7 +1445,7 @@ read_towatch_order</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 mark_unwatched(ARGV[0])</string>
 				<key>scriptargtype</key>
@@ -1533,7 +1533,7 @@ mark_unwatched(ARGV[0])</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>require "#{Dir.pwd}/watchlist_functions.rb"
+				<string>require "#{Dir.pwd}/scripts/watchlist_functions.rb"
 
 delete_from_list(ARGV[0], "watched")
 system('/usr/bin/afplay', '/System/Library/Sounds/Frog.aiff')</string>
