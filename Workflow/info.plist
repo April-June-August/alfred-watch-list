@@ -8,47 +8,11 @@
 	<string>Internet</string>
 	<key>connections</key>
 	<dict>
-		<key>12FDD660-80AA-4FAF-947F-FCF0214BBD32</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>222FE78E-6C32-4D15-BD10-5439EB194B3C</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>1C0E08EA-ED61-4255-B50B-2EC1547C85F7</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>AFB3D5CC-1B83-4675-91D8-770B0B2B7576</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>222FE78E-6C32-4D15-BD10-5439EB194B3C</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>6DBE8BF2-3AA2-46A3-A028-739C1E71A985</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>4A219552-986C-4E50-B564-FBC45C19D70A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -258,6 +222,29 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>BDCCD42B-BB98-4032-A4A8-261C187CFCDE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>870076E4-D2BE-4249-A8ED-17BD03434A90</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6DBE8BF2-3AA2-46A3-A028-739C1E71A985</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>4A219552-986C-4E50-B564-FBC45C19D70A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -683,29 +670,6 @@ add_url_to_watchlist(ARGV[0].strip, ENV['add_url_playlist'] == '1')</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:keyword_prefix}{var:browser_keyword}</string>
-				<key>skipuniversalaction</key>
-				<true/>
-				<key>subtext</key>
-				<string>Add the frontmost browser tab to the watchlist</string>
-				<key>text</key>
-				<string>Browser Tab</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>12FDD660-80AA-4FAF-947F-FCF0214BBD32</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>soundname</key>
 				<string>Morse</string>
 				<key>systemsound</key>
@@ -721,17 +685,55 @@ add_url_to_watchlist(ARGV[0].strip, ENV['add_url_playlist'] == '1')</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>tasksettings</key>
-				<dict/>
-				<key>taskuid</key>
-				<string>com.alfredapp.automation.extras/web-browsers/frontmost-browser/frontmost.tabs.current</string>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>{var:keyword_prefix}{var:browser_keyword}</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Loading from Browser and Clipboard…</string>
+				<key>script</key>
+				<string>require "#{Dir.pwd}/extract_url_functions.rb"
+
+show_options</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>skipuniversalaction</key>
+				<true/>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Add from Browser Tab or Clipboard</string>
+				<key>type</key>
+				<integer>2</integer>
+				<key>withspace</key>
+				<false/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.automation.task</string>
+			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>222FE78E-6C32-4D15-BD10-5439EB194B3C</string>
+			<string>870076E4-D2BE-4249-A8ED-17BD03434A90</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1631,15 +1633,6 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>ypos</key>
 			<real>25</real>
 		</dict>
-		<key>12FDD660-80AA-4FAF-947F-FCF0214BBD32</key>
-		<dict>
-			<key>colorindex</key>
-			<integer>2</integer>
-			<key>xpos</key>
-			<real>40</real>
-			<key>ypos</key>
-			<real>675</real>
-		</dict>
 		<key>1A72974B-3830-4919-A743-5EDC252A6417</key>
 		<dict>
 			<key>xpos</key>
@@ -1653,13 +1646,6 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<real>40</real>
 			<key>ypos</key>
 			<real>1175</real>
-		</dict>
-		<key>222FE78E-6C32-4D15-BD10-5439EB194B3C</key>
-		<dict>
-			<key>xpos</key>
-			<real>250</real>
-			<key>ypos</key>
-			<real>675</real>
 		</dict>
 		<key>25A8384D-6E03-4FCF-B33B-D971474D9316</key>
 		<dict>
@@ -1818,6 +1804,15 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<real>520</real>
 			<key>ypos</key>
 			<real>2135</real>
+		</dict>
+		<key>870076E4-D2BE-4249-A8ED-17BD03434A90</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>2</integer>
+			<key>xpos</key>
+			<real>40</real>
+			<key>ypos</key>
+			<real>675</real>
 		</dict>
 		<key>9537F6F1-6608-4671-BE03-A3DCD23A06DF</key>
 		<dict>
@@ -2030,7 +2025,7 @@ All media players are supported, but not all are able to play streams. [mpv](htt
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>b</string>
+				<string>a</string>
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>
