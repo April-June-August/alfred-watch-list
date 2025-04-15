@@ -184,7 +184,7 @@ end
 def process_single_url(url, playlist, id)
   playlist_flag = playlist ? '--yes-playlist' : '--no-playlist'
 
-  stdout, stderr, status = Open3.capture3('/opt/homebrew/bin/yt-dlp', '--get-filename', '-o', '%(title)s|||||%(channel)s', playlist_flag, url)
+  stdout, stderr, status = Open3.capture3('/opt/homebrew/bin/yt-dlp', '--no-check-certificate', '--get-filename', '-o', '%(title)s|||||%(channel)s', playlist_flag, url)
   if status.success?
     all_title_and_channel = stdout.split("\n")
   else
@@ -213,10 +213,10 @@ def process_single_url(url, playlist, id)
 
   # If playlist, get the playlist name instead of the the name of the first item
 
-  # title_and_channel = all_title_and_channel.count > 1 ? Open3.capture2('/opt/homebrew/bin/yt-dlp', '--yes-playlist', '--get-filename', '--output', '%(playlist)s|||||%(channel)s', url).first.split("\n").first : all_title_and_channel[0]
+  # title_and_channel = all_title_and_channel.count > 1 ? Open3.capture2('/opt/homebrew/bin/yt-dlp', '--no-check-certificate', '--yes-playlist', '--get-filename', '--output', '%(playlist)s|||||%(channel)s', url).first.split("\n").first : all_title_and_channel[0]
 
   if all_title_and_channel.count > 1
-    stdout, stderr, status = Open3.capture3('/opt/homebrew/bin/yt-dlp', '--yes-playlist', '--get-filename', '--output', '%(playlist)s|||||%(channel)s', url)
+    stdout, stderr, status = Open3.capture3('/opt/homebrew/bin/yt-dlp', '--no-check-certificate', '--yes-playlist', '--get-filename', '--output', '%(playlist)s|||||%(channel)s', url)
 
     if status.success?
       title_and_channel = stdout.split("\n").first
@@ -235,9 +235,9 @@ def process_single_url(url, playlist, id)
 
   title, channel = title_and_channel.split('|||||').first(2)
 
-  # durations = Open3.capture2('/opt/homebrew/bin/yt-dlp', '--get-duration', playlist_flag, url).first.split("\n")
+  # durations = Open3.capture2('/opt/homebrew/bin/yt-dlp', '--no-check-certificate', '--get-duration', playlist_flag, url).first.split("\n")
 
-  stdout, stderr, status = Open3.capture3('/opt/homebrew/bin/yt-dlp', '--get-duration', playlist_flag, url)
+  stdout, stderr, status = Open3.capture3('/opt/homebrew/bin/yt-dlp', '--no-check-certificate', '--get-duration', playlist_flag, url)
 
   if status.success?
     durations = stdout.split("\n")
