@@ -188,7 +188,7 @@ def process_single_url(url, playlist, id)
   if status.success?
     all_title_and_channel = stdout.split("\n")
   else
-    notification("❌️ ERROR: “#{stderr}”", 'Basso')
+    notification("❌️ ERROR: “#{stderr}”", '')
     File.open(Failed_list, "a") do |file|
       file.puts "#{url} “failed when extracting titles and channel” #{stderr}\n"
     end
@@ -202,7 +202,7 @@ def process_single_url(url, playlist, id)
   if all_title_and_channel.empty?
     # record a failed list for failed items
     File.open(Failed_list, "a") do |file|
-      notification("❌️ ERROR: “succeeded but result empty”", 'Basso')
+      notification("❌️ ERROR: “succeeded but result empty”", '')
       file.puts "#{url} “succeeded but result empty”\n"
     end
     return ""
@@ -221,7 +221,7 @@ def process_single_url(url, playlist, id)
     if status.success?
       title_and_channel = stdout.split("\n").first
     else
-      notification("❌️ ERROR: “failed when extracting playlist name and channel”", 'Basso')
+      notification("❌️ ERROR: “failed when extracting playlist name and channel”", '')
 
       File.open(Failed_list, "a") do |file|
         file.puts "#{url} “failed when extracting playlist name and channel” #{stderr}\n"
@@ -242,7 +242,7 @@ def process_single_url(url, playlist, id)
   if status.success?
     durations = stdout.split("\n")
   else
-    notification("❌️ ERROR: “failed when extracting duration”", 'Basso')
+    notification("❌️ ERROR: “failed when extracting duration”", '')
 
     File.open(Failed_list, "a") do |file|
       file.puts "#{url} “failed when extracting duration” #{stderr}\n"
